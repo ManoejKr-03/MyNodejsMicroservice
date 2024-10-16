@@ -1,0 +1,42 @@
+version: '3'
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - salesinfo
+      - productinfo
+      - customerinfo
+
+  salesinfo:
+    build: ./salesinfo
+    depends_on:
+      - mysql
+
+  productinfo:
+    build: ./productinfo
+    depends_on:
+      - mongodb
+
+  customerinfo:
+    build: ./customerinfo
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: pass@word1
+      MYSQL_DATABASE: salesdb
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  mongodb:
+    image: mongo:4
+    volumes:
+      - mongodb-data:/data/db
+
+volumes:
+  mysql-data:
+  mongodb-data:
